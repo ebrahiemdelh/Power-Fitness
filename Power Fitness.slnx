@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Power Fitness.BLL/Power Fitness.BLL.csproj" Id="43855b44-4f9d-4f76-9891-dda95e81821f" />
+  <Project Path="Power Fitness.DAL/Power Fitness.DAL.csproj" Id="c475d11d-3959-4a19-9398-7ad5f099adab" />
+  <Project Path="Power Fitness/Power Fitness.csproj" />
+</Solution>
