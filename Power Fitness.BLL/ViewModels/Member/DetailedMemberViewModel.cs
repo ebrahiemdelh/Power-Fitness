@@ -22,6 +22,5 @@ namespace Power_Fitness.BLL.ViewModels.Member
         public string MembershipStartDate { get; set; } = default!;
         public string MembershipEndDate { get; set; } = default!;
 
-
     }
 }

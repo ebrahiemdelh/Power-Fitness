@@ -47,7 +47,7 @@ namespace Power_Fitness.Controllers
         #region Details
         public async Task<IActionResult> Details(int id, CancellationToken cancellationToken = default)
         {
-            var member = _membersService.GetMemberAsync(id, cancellationToken);
+            var member = await _membersService.GetMemberAsync(id, cancellationToken);
 
             if (member == null) return NotFound();
 
@@ -81,7 +81,17 @@ namespace Power_Fitness.Controllers
 
             TempData["SuccessMessage"] = "Member Updated Successfully";
             return RedirectToAction(nameof(Index));
-        #endregion
         }
+        #endregion
+
+        #region HealthRecord
+        public async Task<IActionResult> HealthRecordDetails(int id,CancellationToken cancellationToken=default)
+        {
+            var healthRecordVM = await _membersService.GetHealthRecord(id,cancellationToken);
+            if (healthRecordVM == null) return NotFound();
+            return View(healthRecordVM);
+        }
+        #endregion
+
     }
 }

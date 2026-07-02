@@ -11,14 +11,20 @@ namespace Power_Fitness.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<bool> AnyAsync(Expression<Func<Member, bool>> predicate, CancellationToken cancellationToken = default)
-            => _dbContext.Members.AnyAsync(predicate, cancellationToken);
+        public async Task<bool> AnyAsync(Expression<Func<Member, bool>> predicate, CancellationToken cancellationToken = default)
+            => await _dbContext.Members.AnyAsync(predicate, cancellationToken);
 
-        public Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default)
-            => _dbContext.Members.AnyAsync(m => m.Email == email);
+        public async Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default)
+            => await _dbContext.Members.AnyAsync(m => m.Email == email);
 
 
-        public Task<bool> PhoneExistsAsync(string phone, CancellationToken cancellationToken = default)
-            => _dbContext.Members.AnyAsync(m => m.Phone == phone);
+        public async Task<bool> PhoneExistsAsync(string phone, CancellationToken cancellationToken = default)
+            => await _dbContext.Members.AnyAsync(m => m.Phone == phone);
+
+
+        public async Task<Membership?> GetMemberShipByMemberId(int memberId, CancellationToken cancellationToken = default)
+            => await _dbContext.Memberships.Where(ms => ms.MemberId == memberId)
+            .Include(ms => ms.Plan)
+            .FirstOrDefaultAsync(ms => ms.CreatedAt.AddDays(ms.Plan.DurationDays) <= DateTime.Today, cancellationToken);
     }
 }

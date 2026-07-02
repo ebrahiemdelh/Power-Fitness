@@ -1,29 +1,41 @@
-﻿using Power_Fitness.BLL.ViewModels.Member;
-using Power_Fitness.DAL.Contracts;
+﻿using Power_Fitness.DAL.Contracts;
 
 namespace Power_Fitness.BLL.Services
 {
     public class MembersService : IMembersService
     {
         private readonly IMemberRepository _membersRepository;
-        public MembersService(IMemberRepository membersRepository)
+        private readonly IHealthRecordRepository _healthRecordRepository;
+        private readonly IPlanRepository _planRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        public MembersService(IMemberRepository membersRepository,
+            IPlanRepository planRepository,
+            IUnitOfWork unitOfWork)
         {
             _membersRepository = membersRepository;
+            _planRepository = planRepository;
+            _unitOfWork = unitOfWork;
         }
-        public async Task<IEnumerable<MemberViewModel>> GetAllMembersAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<SessionViewModel>> GetAllMembersAsync(CancellationToken cancellationToken = default)
         {
             var members = await _membersRepository.GetAllAsync(cancellationToken: cancellationToken);
-            return members.Select(m => new MemberViewModel
+            return members.Select(m => new SessionViewModel
             {
                 Id = m.Id,
                 Name = m.Name,
-                Email = m.Email
+                Email = m.Email,
+                Gender = m.Gender.ToString(),
+                Phone = m.Phone,
+                Photo = m.Photo,
+
             });
         }
 
         public async Task<DetailedMemberViewModel> GetMemberAsync(int id, CancellationToken cancellationToken = default)
         {
             var member = await _membersRepository.GetByIdAsync(id, cancellationToken);
+            var membership = await _membersRepository.GetMemberShipByMemberId(id, cancellationToken);
+            var plan = await _planRepository.GetByMemberIdAsync(id, cancellationToken);
             if (member == null) return null!;
             return new DetailedMemberViewModel
             {
@@ -35,7 +47,9 @@ namespace Power_Fitness.BLL.Services
                 Gender = member.Gender.ToString(),
                 Photo = member.Photo,
                 Address = $"{member.Address.BuildingNo} - {member.Address.Street} - {member.Address.City}",
-                //PlanName
+                PlanName = plan?.Name ?? "",
+                MembershipStartDate = membership?.CreatedAt.ToString() ?? "",
+                MembershipEndDate = membership?.EndDate.ToString() ?? "",
             };
         }
 
@@ -55,6 +69,8 @@ namespace Power_Fitness.BLL.Services
                 Email = member.Email,
                 Phone = member.Phone,
                 DateOfBirth = member.DOB,
+                Gender = member.Gender,
+                Photo = "",
 
                 HealthRecord = new HealthRecord
                 {
@@ -90,6 +106,26 @@ namespace Power_Fitness.BLL.Services
 
             return (await _membersRepository.UpdateAsync(member, cancellationToken)) > 0;
 
+        }
+
+
+        public async Task<MemberHealthRecordViewModel?> GetHealthRecord(int memberId, CancellationToken cancellationToken = default)
+        {
+            var healthRecord = await _healthRecordRepository.GetByMemberIdAsync(memberId, cancellationToken);
+            if (healthRecord is null) return null;
+            var healthRecordVM = new MemberHealthRecordViewModel
+            {
+                Height = healthRecord.Height,
+                Weight = healthRecord.Weight,
+                BloodType = healthRecord.BloodType,
+                Note = healthRecord.Note,
+            };
+            return healthRecordVM;
+        }
+
+        public async Task<Membership?> GetMemberShipByMemberId(int memberId, CancellationToken cancellationToken = default!)
+        {
+            return await _membersRepository.GetMemberShipByMemberId(memberId, cancellationToken);
         }
     }
 }

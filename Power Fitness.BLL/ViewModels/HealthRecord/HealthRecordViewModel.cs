@@ -5,9 +5,11 @@ namespace Power_Fitness.BLL.ViewModels.HealthRecord
     public class HealthRecordViewModel
     {
         [Range(0, 300, ErrorMessage = "Height must be between 0 and 300.")]
+        [Required(ErrorMessage =("Height Is Required"))]
         public decimal Height { get; set; }
 
         [Range(1, 500, ErrorMessage = "Weight must be between 1 and 500.")]
+        [Required(ErrorMessage = ("Weight Is Required"))]
         public decimal Weight { get; set; }
 
         [Required(ErrorMessage = "Blood type is required.")]

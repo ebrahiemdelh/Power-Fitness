@@ -16,6 +16,7 @@ namespace Power_Fitness.BLL.ViewModels.Member
         public string Email { get; set; } = default!;
 
         [Required(ErrorMessage = "Phone number is required.")]
+        [Length(11,11,ErrorMessage ="Phone Number Length Is 11 ")]
         [DataType(DataType.PhoneNumber)]
         //[Phone]
         public string Phone { get; set; } = default!;
@@ -41,7 +42,7 @@ namespace Power_Fitness.BLL.ViewModels.Member
 
 
         [Required(ErrorMessage = "Health record is required.")]
-        public HealthRecordViewModel HealthRecord { get; set; }
+        public HealthRecordViewModel HealthRecord { get; set; } = default!;
 
     }
 }

@@ -11,5 +11,6 @@ namespace Power_Fitness.DAL.Contracts
 
         Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default);
         Task<bool> PhoneExistsAsync(string phone, CancellationToken cancellationToken = default);
+        Task<Membership?> GetMemberShipByMemberId(int memberId, CancellationToken cancellationToken = default);
     }
 }
