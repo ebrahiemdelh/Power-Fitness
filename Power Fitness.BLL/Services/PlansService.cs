@@ -15,7 +15,7 @@ namespace Power_Fitness.BLL.Services
         }
         public async Task<Plan> GetPlanByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _plansRepository.GetByIdAsync(id, cancellationToken: cancellationToken);
+            return await _plansRepository.GetByIdAsync(id, cancellationToken: cancellationToken) ?? null;
         }
     }
 }

@@ -1,82 +1,84 @@
-﻿@model EditMemberViewModel
-<div class="container">
-    <main role="main" class="pb-3">
+﻿@model EditSessionViewModel
+@{
+    ViewData["Title"] = "Edit Session";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
+<div class="container mt-4">
+    <header class="mb-4">
+        <h3 class="text-primary-color">Edit Session</h3>
+        <p class="text-muted">Update session information</p>
+    </header>
 
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card card-details border-0 p-2 shadow">
-                        <div class="card-body text-center">
-                            <div class="text-center mt-3">
-                                <img src="~/images/@Model.Photo" alt="@Model.Name" class="rounded-circle"
-                                     style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #fff; margin-top: -60px;" />
+    <form asp-action="Edit" method="post">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+
+                        <!-- Session Information -->
+                        <div class="section-header mb-3">
+                            <h5 class="text-primary fw-bold">Session Information</h5>
+                            <hr class="mt-2">
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="TrainerId" class="form-label fw-semibold">
+                                    Trainer <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="TrainerId" asp-items="ViewBag.Trainers" class="form-select">
+                                    <option value="">Select Trainer</option>
+                                </select>
+                                <span asp-validation-for="TrainerId" class="text-danger"></span>
                             </div>
-                            <div class="card-body text-center">
-                                <h2 class="mb-1 text-primary-color">@Model.Name</h2>
-                                <form asp-controller="Members" asp-action="EditMember" method="post">
-                                    <div class="mt-4 text-start">
-                                        <div class="row g-3">
-                                            <div class="col-12">
-                                                <div class="p-3 bg-light rounded">
-                                                    <small class="text-muted d-block mb-1">Email</small>
-                                                    <input asp-for="Email" class="form-control" />
-                                                    <span asp-validation-for="Email" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="p-3 bg-light rounded">
-                                                    <small class="text-muted d-block mb-1">Phone</small>
-                                                    <input asp-for="Phone" class="form-control" />
-                                                    <span asp-validation-for="Phone" class="text-danger"></span>
-                                                </div>
-                                            </div>
 
-                                            <div class="col-6">
-                                                <div class="p-3 bg-light rounded">
-                                                    <small class="text-muted d-block mb-1">Building Number</small>
-                                                    <input asp-for="BuildingNo" class="form-control" />
-                                                    <span asp-validation-for="BuildingNo"
-                                                          class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="p-3 bg-light rounded">
-                                                    <small class="text-muted d-block mb-1">City</small>
-                                                    <input asp-for="City" class="form-control" />
-                                                    <span asp-validation-for="City" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-6">
-                                                <div class="p-3 bg-light rounded">
-                                                    <small class="text-muted d-block mb-1">Street</small>
-                                                    <input asp-for="Street" class="form-control" />
-                                                    <span asp-validation-for="Street" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="d-flex justify-content-between gap-2 mt-3 px-3 pb-3">
-                                        <a asp-controller="Members" asp-action="Index" class="btn btn-fill ">
-                                            Back to
-                                            List
-                                        </a>
-                                        <button type="submit" class="btn btn-fill ">Done</button>
-                                    </div>
-                                </form>
+                            <div class="col-12">
+                                <label asp-for="Description" class="form-label fw-semibold">
+                                    Description <span class="text-danger">*</span>
+                                </label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
                             </div>
                         </div>
 
+                        <!-- Date & Time -->
+                        <div class="section-header mb-3">
+                            <h5 class="text-primary fw-bold">Date & Time</h5>
+                            <hr class="mt-2">
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="StartDate" class="form-label fw-semibold">
+                                    Start Date & Time <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="StartDate" type="datetime-local" class="form-control" />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="EndDate" class="form-label fw-semibold">
+                                    End Date & Time <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="EndDate" type="datetime-local" class="form-control" />
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                            <a asp-action="Index" class="btn btn-outline">
+                                <i class="bi bi-arrow-left me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-fill">
+                                <i class="bi bi-check-lg me-1"></i>Update Session
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
-    </main>
+    </form>
 </div>
 
 @section Scripts {

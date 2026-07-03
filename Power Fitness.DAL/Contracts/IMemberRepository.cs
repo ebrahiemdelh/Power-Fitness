@@ -1,6 +1,7 @@
 ﻿
 
 using Power_Fitness.DAL.Context;
+using Power_Fitness.DAL.Dtos.Members;
 using System.Linq.Expressions;
 
 namespace Power_Fitness.DAL.Contracts
@@ -12,5 +13,7 @@ namespace Power_Fitness.DAL.Contracts
         Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default);
         Task<bool> PhoneExistsAsync(string phone, CancellationToken cancellationToken = default);
         Task<Membership?> GetMemberShipByMemberId(int memberId, CancellationToken cancellationToken = default);
+
+        Task<PartialMemberShipData?> GetPartialMemberShipDataByMemberIdAsync(int memberId, CancellationToken cancellationToken = default);
     }
 }

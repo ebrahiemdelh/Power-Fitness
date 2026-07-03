@@ -1,73 +1,113 @@
-﻿@model DetailedMemberViewModel
-<div class="container">
-    <main role="main" class="pb-3">
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card card-details border-0 p-2 shadow">
-                        <div class="text-center mt-3">
-                            <img src="~/images/User.jpg" alt="MemberName" class="rounded-circle"
-                                 style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #fff; margin-top: -60px;" />
-                        </div>
-                        <div class="card-body text-center">
-                            <h2 class="mb-1 text-primary-color">@Model.Name</h2>
-                            <h4 class="mb-2 pb-1 border-bottom d-block">@(Model.PlanName ?? "No Plan") </h4>
-                            <div class="mt-4 text-start">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Email</small>
-                                            <strong>@Model.Email</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Phone</small>
-                                            <strong>@Model.Phone</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Gender</small>
-                                            <strong>@Model.Gender</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Date of Birth</small>
-                                            <strong>@Model.DOB</strong>
-                                        </div>
-                                    </div>
+﻿@model DetailedSessionViewModel
+@{
+    ViewData["Title"] = "Session Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-                                    <div class="col-6">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Membership Start Date</small>
-                                            <strong>@Model.MembershipStartDate</strong>
-                                        </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header @(Model.Status == "Ongoing" ? "bg-success"
+                     : Model.Status == "Upcoming" ? "bg-primary" : "bg-secondary") text-white text-center py-4">
+                    <i class="bi bi-calendar-event display-4 mb-3"></i>
+                    <h2 class="mb-2">@Model.CategoryName</h2>
+                    <span class="badge bg-light text-dark fs-6">@Model.Status</span>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Description -->
+                    <div class="mb-4 p-3 bg-light rounded">
+                        <h6 class="text-primary-color mb-2">
+                            <i class="bi bi-file-text me-2"></i>Description
+                        </h6>
+                        <p class="mb-0">@Model.Description</p>
+                    </div>
+
+                    <!-- Session Details -->
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="detail-box p-3 border rounded">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="bi bi-person-circle text-primary-color fs-3"></i>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Membership End Date</small>
-                                            <strong>@Model.MembershipEndDate</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Address</small>
-                                            <strong>@Model.Address</strong>
-                                        </div>
+                                    <div>
+                                        <small class="text-muted d-block">Trainer</small>
+                                        <strong>@Model.TrainerName</strong>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-between gap-2 px-3 pb-3">
-                            <a asp-controller="Members" asp-action="Index" class="btn btn-fill flex-fill">Back to List</a>
+                        <div class="col-md-6">
+                            <div class="detail-box p-3 border rounded">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="bi bi-people text-primary-color fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Capacity</small>
+                                        <strong>@Model.AvailableSlots / @Model.Capacity spots</strong>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="detail-box p-3 border rounded">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="bi bi-calendar-check text-primary-color fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Start Time</small>
+                                        <strong>@Model.StartDate</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="detail-box p-3 border rounded">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="bi bi-calendar-x text-primary-color fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">End Time</small>
+                                        <strong>@Model.EndDate</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="detail-box p-3 border rounded bg-light">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="bi bi-hourglass-split text-primary-color fs-3"></i>
+                                    </div>
+                                    <div>
+                                        <small class="text-muted d-block">Duration</small>
+                                        <strong class="text-primary-color fs-5">
+                                            @* @Model.Duration.Hours Hours @Model.Duration.Minutes Minutes *@
+                                        </strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white border-0 p-4">
+                    <div class="d-flex justify-content-between gap-2">
+                        <a asp-action="Index" class="btn btn-outline flex-fill">
+                            <i class="bi bi-arrow-left me-1"></i>Back to List
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-
-    </main>
+    </div>
 </div>

@@ -16,7 +16,9 @@ namespace Power_Fitness.BLL.ViewModels.Member
 
         public string Photo { get; set; } = "";
 
-        public string Address { get; set; } = default!;
+        public int BuildingNo { get; set; }
+        public string Street { get; set; } = default!;
+        public string City { get; set; } = default!;
 
         public string PlanName { get; set; } = default!;
         public string MembershipStartDate { get; set; } = default!;

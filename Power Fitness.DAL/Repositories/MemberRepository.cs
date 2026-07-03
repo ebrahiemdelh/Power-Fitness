@@ -1,4 +1,5 @@
 ﻿using Power_Fitness.DAL.Context;
+using Power_Fitness.DAL.Dtos.Members;
 using System.Linq.Expressions;
 
 namespace Power_Fitness.DAL.Repositories
@@ -26,5 +27,20 @@ namespace Power_Fitness.DAL.Repositories
             => await _dbContext.Memberships.Where(ms => ms.MemberId == memberId)
             .Include(ms => ms.Plan)
             .FirstOrDefaultAsync(ms => ms.CreatedAt.AddDays(ms.Plan.DurationDays) <= DateTime.Today, cancellationToken);
+
+        public async Task<PartialMemberShipData?> GetPartialMemberShipDataByMemberIdAsync(int memberId, CancellationToken cancellationToken = default)
+        {
+            var membershipPlan = await _dbContext.Memberships.Where(ms => ms.MemberId == memberId)
+                .Include(ms => ms.Plan)
+                .Select(ms => new PartialMemberShipData
+                {
+                    PlanName = ms.Plan.Name,
+                    DurationDays = ms.Plan.DurationDays,
+                    MembershipStartDate = ms.CreatedAt,
+                    MembershipEndDate = ms.EndDate
+                })
+                .FirstOrDefaultAsync(ms => ms.MembershipStartDate.AddDays(ms.DurationDays) <= DateTime.Now, cancellationToken);
+            return membershipPlan ?? null;
+        }
     }
 }

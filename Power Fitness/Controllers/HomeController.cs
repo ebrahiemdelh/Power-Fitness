@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Power_Fitness.DAL.Models;
 using System.Diagnostics;
 

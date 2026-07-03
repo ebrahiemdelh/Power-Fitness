@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Power_Fitness.BLL.Contracts;
-using Power_Fitness.DAL.Context;
-
-namespace Power_Fitness.Controllers
+﻿namespace Power_Fitness.Controllers
 {
     public class PlansController : Controller
     {

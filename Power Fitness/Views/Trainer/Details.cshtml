@@ -1,73 +1,67 @@
-﻿@model DetailedMemberViewModel
-<div class="container">
-    <main role="main" class="pb-3">
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card card-details border-0 p-2 shadow">
-                        <div class="text-center mt-3">
-                            <img src="~/images/User.jpg" alt="MemberName" class="rounded-circle"
-                                 style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #fff; margin-top: -60px;" />
-                        </div>
-                        <div class="card-body text-center">
-                            <h2 class="mb-1 text-primary-color">@Model.Name</h2>
-                            <h4 class="mb-2 pb-1 border-bottom d-block">@(Model.PlanName ?? "No Plan") </h4>
-                            <div class="mt-4 text-start">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Email</small>
-                                            <strong>@Model.Email</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Phone</small>
-                                            <strong>@Model.Phone</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Gender</small>
-                                            <strong>@Model.Gender</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Date of Birth</small>
-                                            <strong>@Model.DOB</strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-6">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Membership Start Date</small>
-                                            <strong>@Model.MembershipStartDate</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Membership End Date</small>
-                                            <strong>@Model.MembershipEndDate</strong>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="p-3 bg-light rounded">
-                                            <small class="text-muted d-block mb-1">Address</small>
-                                            <strong>@Model.Address</strong>
-                                        </div>
-                                    </div>
+﻿@model DetailedTrainerViewModel
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary-color text-white text-center py-5">
+                    <i class="bi bi-person-badge display-4 mb-3"></i>
+                    <h2 class="mb-0">@Model.Name</h2>
+                    <span class="badge bg-light text-primary-color mt-2">@Model.Specialties Trainer</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="plan-details">
+                        <div class="detail-item mb-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="icon-box me-3">
+                                    <i class="bi bi-envelope text-primary-color fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-muted">Email</h6>
+                                    <p class="mb-0 fw-bold">@Model.Email</p>
                                 </div>
                             </div>
                         </div>
 
+                        <div class="detail-item mb-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="icon-box me-3">
+                                    <i class="bi bi-telephone text-primary-color fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-muted">Phone</h6>
+                                    <p class="mb-0 fw-bold">@Model.Phone</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-item mb-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="icon-box me-3">
+                                    <i class="bi bi-calendar-date text-primary-color fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-muted">Date Of Birth</h6>
+                                    <p class="mb-0 fw-bold">@Model.DateOfBirth</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-item mb-4">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="icon-box me-3">
+                                    <i class="bi bi-geo-alt text-primary-color fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-muted">Address</h6>
+                                    <p class="mb-0 fw-bold">@Model.Address</p>
+                                </div>
+                            </div>
+                        </div>
                         <div class="d-flex justify-content-between gap-2 px-3 pb-3">
-                            <a asp-controller="Members" asp-action="Index" class="btn btn-fill flex-fill">Back to List</a>
+                            <a asp-controller="Trainers" asp-action="Index" class="btn btn-fill flex-fill">Back to List</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-    </main>
+    </div>
 </div>
