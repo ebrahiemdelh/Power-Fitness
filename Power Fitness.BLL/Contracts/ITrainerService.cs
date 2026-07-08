@@ -6,7 +6,8 @@ namespace Power_Fitness.BLL.Contracts
     {
         Task<IEnumerable<TrainerViewModel>> GetTrainersAsync(CancellationToken cancellationToken = default);
         Task<DetailedTrainerViewModel> GetDetailedTrainersAsync(int id, CancellationToken cancellationToken = default);
-        Task<CreateTrainerViewModel> CreateTrainerAsync(CreateTrainerViewModel model, CancellationToken cancellationToken = default);
-        Task<EditTrainerViewModel> EditTrainerAsync(EditTrainerViewModel model, CancellationToken cancellationToken = default);
+        Task<bool> CreateTrainerAsync(CreateTrainerViewModel model, CancellationToken cancellationToken = default);
+        Task<bool> EditTrainerAsync(EditTrainerViewModel model, CancellationToken cancellationToken = default);
+        Task<bool> DeleteTrainerAsync(int id, CancellationToken cancellationToken = default);
     }
 }

@@ -22,5 +22,19 @@ namespace Power_Fitness.DAL.Repositories
             return await _dbContext.Bookings
                 .CountAsync(b => b.SessionId == sessionId, cancellationToken);
         }
+
+        public async Task<Session> GetWithCategoryByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Sessions.Where(s=>s.Id==id)
+                .Include(s => s.Category)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<Session> GetWithTrainerByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Sessions.Where(s=>s.Id==id)
+                .Include(s => s.Trainer)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

@@ -8,7 +8,8 @@ namespace Power_Fitness.BLL.Contracts
         Task<SessionViewModel> GetSessionByIdAsync(int id, CancellationToken cancellationToken = default);
 
         Task<bool> CreateSessionAsync(CreateSessionViewModel createSession, CancellationToken cancellationToken = default);
-        Task<bool> EditSessionAsync(EditSessionViewModel editSession, CancellationToken cancellationToken = default);
+        Task<EditSessionViewModel> GetSessionForUpdateAsync(int id, CancellationToken cancellationToken = default);
+        Task<bool> EditSessionAsync(int id, EditSessionViewModel editSession, CancellationToken cancellationToken = default);
         Task<bool> DeleteSessionAsync(int id, CancellationToken cancellationToken = default);
 
         Task<Dictionary<int, string>> GetCategories(CancellationToken cancellationToken = default);

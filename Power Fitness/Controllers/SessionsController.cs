@@ -28,7 +28,7 @@ namespace Power_Fitness.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _sessionService.CreateSessionAsync(model,cancellationToken: cancellationToken);
+                await _sessionService.CreateSessionAsync(model, cancellationToken: cancellationToken);
                 return RedirectToAction(nameof(Index));
             }
             await GetTrainersAndCategories(cancellationToken);
@@ -38,11 +38,13 @@ namespace Power_Fitness.Controllers
         #region Edit Session
         public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken = default)
         {
-            var session = await _sessionService.GetSessionByIdAsync(id, cancellationToken: cancellationToken);
+            var session = await _sessionService.GetSessionForUpdateAsync(id, cancellationToken: cancellationToken);
             if (session == null)
             {
                 return NotFound();
             }
+
+            await GetTrainersAndCategories(cancellationToken);
             return View(session);
         }
 
@@ -51,13 +53,33 @@ namespace Power_Fitness.Controllers
         {
             if (ModelState.IsValid)
             {
-                //await _sessionService.UpdateSessionAsync(cancellationToken: cancellationToken);
+                await _sessionService.EditSessionAsync(id, model, cancellationToken: cancellationToken);
                 return RedirectToAction(nameof(Index));
             }
+            await GetTrainersAndCategories(cancellationToken);
+
             return View(model);
         }
         #endregion
-        async Task GetTrainersAndCategories(CancellationToken cancellationToken)
+
+        #region Delete Session
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken = default)
+        {
+            var session = await _sessionService.GetSessionByIdAsync(id, cancellationToken: cancellationToken);
+            if (session == null)
+            {
+                return NotFound();
+            }
+            return View(session);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken cancellationToken = default)
+        {
+            await _sessionService.DeleteSessionAsync(id, cancellationToken: cancellationToken);
+            return RedirectToAction(nameof(Index));
+        }
+        #endregion
+        private async Task GetTrainersAndCategories(CancellationToken cancellationToken)
         {
             var categories = await _sessionService.GetCategories(cancellationToken: cancellationToken);
             var categoriesList = new SelectList(categories, "Key", "Value");

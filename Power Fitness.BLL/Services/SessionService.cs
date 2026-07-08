@@ -58,6 +58,7 @@ namespace Power_Fitness.BLL.Services
             var category = await _unitOfWork.GetRepository<Category>().GetByIdAsync(createSession.CategoryId, cancellationToken);
 
             if (string.Compare(category.Name, trainer.Specialty.ToString(), true) == 0) return false;
+
             //TODO: Check if the trainer is available for the session time
 
             var session = new Session
@@ -73,15 +74,49 @@ namespace Power_Fitness.BLL.Services
             if (result > 1) return true;
             return false;
         }
-
-        public Task<bool> EditSessionAsync(EditSessionViewModel editSession, CancellationToken cancellationToken = default)
+        public async Task<EditSessionViewModel> GetSessionForUpdateAsync(int id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            if (id == 0) return null;
+            var session = await _unitOfWork.Sessions.GetWithCategoryByIdAsync(id, cancellationToken);
+            if (session == null) return null;
+            var result = new EditSessionViewModel
+            {
+                TrainerId = session.TrainerId,
+                Description = session.Description,
+                StartDate = session.StartDate,
+                EndDate = session.EndDate,
+            };
+            return result;
         }
 
-        public Task<bool> DeleteSessionAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<bool> EditSessionAsync(int id, EditSessionViewModel editSession, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            if (id == 0) return false;
+            var session = await _unitOfWork.Sessions.GetWithCategoryByIdAsync(id, cancellationToken);
+            if (session == null) return false;
+
+
+            if (editSession.StartDate > editSession.EndDate) return false;
+            var trainer = await _unitOfWork.GetRepository<Trainer>().GetByIdAsync(editSession.TrainerId, cancellationToken);
+
+            if (string.Compare(session.Category.Name, trainer?.Specialty.ToString(), true) == 0) return false;
+
+
+            session.TrainerId = editSession.TrainerId;
+            session.Description = editSession.Description;
+            session.StartDate = editSession.StartDate;
+            session.EndDate = editSession.EndDate;
+            var result = await _unitOfWork.GetRepository<Session>().UpdateAsync(session, cancellationToken);
+            return result > 0;
+        }
+
+        public async Task<bool> DeleteSessionAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var session = await _unitOfWork.GetRepository<Session>().GetByIdAsync(id, cancellationToken);
+            if (session == null) return false;
+
+            var result = await _unitOfWork.GetRepository<Session>().DeleteAsync(session, cancellationToken);
+            return result > 0;
         }
 
         public async Task<Dictionary<int, string>> GetCategories(CancellationToken cancellationToken = default)
