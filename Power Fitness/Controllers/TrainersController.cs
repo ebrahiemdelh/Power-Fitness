@@ -1,10 +1,10 @@
 ﻿namespace Power_Fitness.Controllers
 {
-    public class TrainerController:Controller
+    public class TrainersController:Controller
     {
         private readonly ITrainerService _trainerService;
 
-        public TrainerController(ITrainerService trainerService)
+        public TrainersController(ITrainerService trainerService)
         {
             _trainerService = trainerService;
         }

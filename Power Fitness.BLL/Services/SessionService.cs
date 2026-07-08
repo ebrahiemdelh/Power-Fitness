@@ -33,19 +33,67 @@ namespace Power_Fitness.BLL.Services
             }
             return result;
         }
-        public Task<CreateSessionViewModel> CreateSessionAsync(CancellationToken cancellationToken = default)
+        public async Task<SessionViewModel> GetSessionByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            var session = await _unitOfWork.Sessions.GetByIdAsync(id, cancellationToken: cancellationToken);
+            if (session == null) return null;
+            var result = new SessionViewModel
+            {
+                Id = session.Id,
+                TrainerName = session.Trainer.Name,
+                CategoryName = session.Category.Name,
+                Description = session.Description,
+                StartDate = session.StartDate,
+                EndDate = session.EndDate,
+                Capacity = session.Capacity,
+                AvailableSlots = session.Capacity - await _unitOfWork.Sessions.CountOfBookedSlots(session.Id, cancellationToken)
+            };
+            return result;
+        }
+        public async Task<bool> CreateSessionAsync(CreateSessionViewModel createSession, CancellationToken cancellationToken = default)
+        {
+            if (createSession.StartDate > createSession.EndDate) return false;
+
+            var trainer = await _unitOfWork.GetRepository<Trainer>().GetByIdAsync(createSession.TrainerId, cancellationToken);
+            var category = await _unitOfWork.GetRepository<Category>().GetByIdAsync(createSession.CategoryId, cancellationToken);
+
+            if (string.Compare(category.Name, trainer.Specialty.ToString(), true) == 0) return false;
+            //TODO: Check if the trainer is available for the session time
+
+            var session = new Session
+            {
+                Capacity = createSession.Capacity,
+                CategoryId = createSession.CategoryId,
+                Description = createSession.Description,
+                StartDate = createSession.StartDate,
+                EndDate = createSession.EndDate,
+                TrainerId = createSession.TrainerId,
+            };
+            var result = await _unitOfWork.GetRepository<Session>().AddAsync(session, cancellationToken);
+            if (result > 1) return true;
+            return false;
+        }
+
+        public Task<bool> EditSessionAsync(EditSessionViewModel editSession, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CreateSessionViewModel> EditSessionAsync(CancellationToken cancellationToken = default)
+        public Task<bool> DeleteSessionAsync(int id, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CreateSessionViewModel> DeleteSessionAsync(CancellationToken cancellationToken = default)
+        public async Task<Dictionary<int, string>> GetCategories(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var categories = await _unitOfWork.GetRepository<Category>().GetAllAsync(cancellationToken: cancellationToken);
+            return categories.ToDictionary(c => c.Id, c => c.Name);
+        }
+
+        public async Task<Dictionary<int, string>> GetTrainers(CancellationToken cancellationToken = default)
+        {
+            var trainers = await _unitOfWork.GetRepository<Trainer>().GetAllAsync(cancellationToken: cancellationToken);
+            return trainers.ToDictionary(t => t.Id, t => t.Name);
         }
     }
 }

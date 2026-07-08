@@ -1,10 +1,12 @@
-﻿namespace Power_Fitness.Controllers
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace Power_Fitness.Controllers
 {
-    public class SessionController : Controller
+    public class SessionsController : Controller
     {
         private readonly ISessionService _sessionService;
 
-        public SessionController(ISessionService sessionService)
+        public SessionsController(ISessionService sessionService)
         {
             _sessionService = sessionService;
         }
@@ -15,8 +17,9 @@
             return View(sessions);
         }
         #region Create Session
-        public IActionResult Create(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Create(CancellationToken cancellationToken = default)
         {
+            await GetTrainersAndCategories(cancellationToken);
             return View();
         }
 
@@ -25,16 +28,17 @@
         {
             if (ModelState.IsValid)
             {
-                await _sessionService.CreateSessionAsync(cancellationToken: cancellationToken);
+                await _sessionService.CreateSessionAsync(model,cancellationToken: cancellationToken);
                 return RedirectToAction(nameof(Index));
             }
+            await GetTrainersAndCategories(cancellationToken);
             return View(model);
         }
         #endregion
         #region Edit Session
         public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken = default)
         {
-            var session = await _sessionService.EditSessionAsync(cancellationToken: cancellationToken);
+            var session = await _sessionService.GetSessionByIdAsync(id, cancellationToken: cancellationToken);
             if (session == null)
             {
                 return NotFound();
@@ -53,6 +57,18 @@
             return View(model);
         }
         #endregion
+        async Task GetTrainersAndCategories(CancellationToken cancellationToken)
+        {
+            var categories = await _sessionService.GetCategories(cancellationToken: cancellationToken);
+            var categoriesList = new SelectList(categories, "Key", "Value");
+
+            var trainers = await _sessionService.GetTrainers(cancellationToken: cancellationToken);
+            var trainersList = new SelectList(trainers, "Key", "Value");
+
+            ViewBag.Categories = categoriesList;
+            ViewBag.Trainers = trainersList;
+        }
+
 
     }
 }
