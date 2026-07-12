@@ -2,24 +2,6 @@
 @{
     ViewData["Title"] = "Sessions";
 }
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div id="Alert" class="alert alert-success alert-dismissible fade show">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}
-else if (TempData["ErrorMessage"] != null)
-{
-    <div id="Alert" class="alert alert-danger alert-dismissible fade show">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}
-
 <div class="container">
     <header class="d-flex justify-content-between mt-5 mb-4 align-items-center">
         <div>
@@ -39,7 +21,7 @@ else if (TempData["ErrorMessage"] != null)
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="card h-100 shadow-sm border-0 session-card">
                         <div class="card-header text-white py-3 @(session.Status == "Ongoing" ? "bg-success" :
-                                                                                       session.Status == "Upcoming" ? "bg-primary" : "bg-secondary") ">
+                                                         session.Status == "Upcoming" ? "bg-primary" : "bg-secondary") ">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0">
                                     <i class="bi bi-calendar-event me-2"></i>@session.CategoryName

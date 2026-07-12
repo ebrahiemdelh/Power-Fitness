@@ -18,14 +18,16 @@ namespace Power_Fitness
             builder.Services.AddScoped<IPlansService, PlansService>();
             builder.Services.AddScoped<IMembersService, MembersService>();
             builder.Services.AddScoped<ISessionService, SessionService>();
+            builder.Services.AddScoped<ITrainerService, TrainerService>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); // Use this line for real database repository
             builder.Services.AddScoped<IMemberRepository, MemberRepository>(); // Use this line for real database repository
             //builder.Services.AddScoped(typeof(IPlansRepository<>), typeof(PlansMockRepository<>)); // Use this line for mock repository
 
-            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
+            builder.Services.AddScoped<IPlanRepository, PlanRepository>();
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

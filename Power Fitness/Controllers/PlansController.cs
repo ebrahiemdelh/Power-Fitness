@@ -1,4 +1,6 @@
-﻿namespace Power_Fitness.Controllers
+﻿using Power_Fitness.BLL.ViewModels.Plan;
+
+namespace Power_Fitness.Controllers
 {
     public class PlansController : Controller
     {
@@ -28,17 +30,32 @@
         {
             var plan = await _plansService.GetPlanByIdAsync(id, cancellationToken: cancellationToken);
             if (plan is null) return NotFound();
-            return View(plan);
+            var model = new EditPlanViewModel()
+            {
+                Name=plan.Name,
+                Description=plan.Description,
+                Price=plan.Price,
+                DurationDays=plan.DurationDays,
+            };
+            return View(model);
         }
-        //[HttpPost]
-        //public async Task<IActionResult> Activate(int id, CancellationToken cancellationToken)
-        //{
-        //    var plan = await _plansService.GetPlanByIdAsync(id, cancellationToken: cancellationToken);
-        //    if (plan is null) return NotFound();
-        //    plan.IsActive = !plan.IsActive;
-        //    plan.UpdatedAt = DateTime.Now;
-        //    _dbContext.SaveChanges();
-        //    return RedirectToAction("index");
-        //}
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditPlanViewModel model, CancellationToken cancellationToken)
+        {
+            var result = await _plansService.UpdatePLan(id, model, cancellationToken);
+            if (result)
+                TempData["SuccessMessage"] = "Plan Updated Successfully";
+            else
+                TempData["ErrorMessage"] = "Error Updating Plan";
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpPost]
+        public async Task<IActionResult> Activate(int id, CancellationToken cancellationToken)
+        {
+            var result = await _plansService.ActivateAsync(id, cancellationToken);
+            if (result) TempData["SuccessMessage"] = "Activation Status Changed Successfully";
+            else TempData["ErrorMessage"] = "Error Changing Activation Status";
+            return RedirectToAction("index");
+        }
     }
 }

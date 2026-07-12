@@ -22,7 +22,7 @@ namespace Power_Fitness.BLL.Services
                 Email = t.Email,
                 Gender = t.Gender.ToString(),
                 Phone = t.Phone,
-                ImageUrl = ""
+                Specalities = t.Specialty.ToString()
             });
             return result;
         }
@@ -45,6 +45,26 @@ namespace Power_Fitness.BLL.Services
                 Address = $"{trainer.Address.BuildingNo} - {trainer.Address.Street} - {trainer.Address.City}",
             };
         }
+        public async Task<EditTrainerViewModel> GetDetailedTrainersAsyncForEdit(int id, CancellationToken cancellationToken = default)
+        {
+            var trainer = await _unitOfWork.GetRepository<Trainer>().GetByIdAsync(id, cancellationToken);
+            if (trainer == null)
+            {
+                return null;
+            }
+
+            return new EditTrainerViewModel
+            {
+                Name = trainer.Name,
+                Email = trainer.Email,
+                Phone = trainer.Phone,
+
+                Specialties = trainer.Specialty,
+                BuildingNumber = trainer.Address.BuildingNo,
+                Street = trainer.Address.Street,
+                City = trainer.Address.City,
+            };
+        }
         // Todo: Implement CreateTrainerAsync and EditTrainerAsync methods
 
         public async Task<bool> CreateTrainerAsync(CreateTrainerViewModel model, CancellationToken cancellationToken = default)
@@ -52,7 +72,7 @@ namespace Power_Fitness.BLL.Services
             throw new NotImplementedException();
         }
 
-        public async Task<bool> EditTrainerAsync(EditTrainerViewModel model, CancellationToken cancellationToken = default)
+        public async Task<bool> EditTrainerAsync(int id,EditTrainerViewModel model, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

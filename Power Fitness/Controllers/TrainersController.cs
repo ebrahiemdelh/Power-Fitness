@@ -1,6 +1,6 @@
 ﻿namespace Power_Fitness.Controllers
 {
-    public class TrainersController:Controller
+    public class TrainersController : Controller
     {
         private readonly ITrainerService _trainerService;
 
@@ -43,7 +43,7 @@
         #region Edit Trainer
         public async Task<IActionResult> Edit(int id, CancellationToken cancellationToken = default)
         {
-            var trainer = await _trainerService.GetDetailedTrainersAsync(id, cancellationToken: cancellationToken);
+            var trainer = await _trainerService.GetDetailedTrainersAsyncForEdit(id, cancellationToken: cancellationToken);
             if (trainer == null)
             {
                 return NotFound();
@@ -77,5 +77,6 @@
             var result = await _trainerService.DeleteTrainerAsync(id, cancellationToken: cancellationToken);
             return RedirectToAction(nameof(Index));
         }
+        #endregion
     }
 }

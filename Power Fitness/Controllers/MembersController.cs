@@ -75,7 +75,7 @@
             var result = await _membersService.UpdateMemberAsync(id, editMember, cancellationToken);
             if (!result)
             {
-                TempData["ErrorMessage"] = "Email Or Password Already Used";
+                TempData["ErrorMessage"] = "Email Or Phone Already Used";
                 return View(editMember);
             }
 

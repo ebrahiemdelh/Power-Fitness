@@ -9,6 +9,7 @@ namespace Power_Fitness.DAL.Repositories
         private readonly Dictionary<string, object> _repositories = [];
         public IHealthRecordRepository HealthRecords { get; }
         public IMemberRepository Members { get; }
+        public IPlanRepository Plans { get; }
         public ISessionRepository Sessions { get; }
 
         public UnitOfWork(GymDbContext dbContext,

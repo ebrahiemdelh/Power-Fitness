@@ -6,6 +6,7 @@ namespace Power_Fitness.DAL.Contracts
     {
         public IHealthRecordRepository HealthRecords { get; }
         public IMemberRepository Members { get; }
+        public IPlanRepository Plans{ get; }
         public ISessionRepository Sessions { get; }
         IRepository<T> GetRepository<T>() where T : BaseEntity;
 

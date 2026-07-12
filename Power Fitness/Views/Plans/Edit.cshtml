@@ -1,88 +1,63 @@
-﻿@model Plan
+﻿@model EditPlanViewModel
 @{
     ViewData["Title"] = "Edit Plan";
 }
-<div class="container">
-    <main role="main" class="pb-3">
 
-        <div class="container mt-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card shadow-lg border-0">
-                        @* If Plan is Active put class bg-primary-color if not bg-secondary *@
-
-                        <div class="card-header text-white text-center py-5 @(Model.IsActive ? "bg-primary-color" : "bg-secondary")">
-                            <i class="bi bi-award display-4 mb-3"></i>
-                            <h2 class="mb-0">@Model.Name</h2>
-                        </div>
-                        <div class="card-body p-4">
-                            <div class="text-center mb-4 py-3 bg-light rounded">
-                                <div class="display-3 fw-bold text-primary-color">@Model.Price</div>
-                                <small class="text-muted fs-5">EGP</small>
+<div class="container mt-4">
+    <header class="mb-4">
+        <h3 class="text-primary-color">Edit Plan</h3>
+        <p class="text-muted">Update plan details</p>
+    </header>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label asp-for="@Model.Name" class="form-label fw-semibold">
+                                    Plan Name <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="@Model.Name" class="form-control" readonly />
+                                <span asp-validation-for="@Model.Name" class="text-danger d-block"></span>
                             </div>
 
-                            <div class="plan-details">
-                                <div class="detail-item mb-4">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="icon-box me-3">
-                                            <i class="bi bi-calendar-check text-primary-color fs-4"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-muted">Duration</h6>
-                                            <p class="mb-0 fw-bold">@Model.DurationDays days</p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-md-6">
+                                <label asp-for="@Model.DurationDays" class="form-label fw-semibold">
+                                    Duration (Days) <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="@Model.DurationDays" type="number" class="form-control" />
+                                <small class="text-muted">e.g., 30 days = 1 month</small>
+                                <span asp-validation-for="@Model.DurationDays" class="text-danger d-block"></span>
+                            </div>
 
-                                <div class="detail-item mb-4">
-                                    <div class="d-flex align-items-start mb-2">
-                                        <div class="icon-box me-3">
-                                            <i class="bi bi-file-text text-primary-color fs-4"></i>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <h6 class="mb-2 text-muted">Description</h6>
-                                            <p class="mb-0">@Model.Description</p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-md-6">
+                                <label asp-for="@Model.Price" class="form-label fw-semibold">
+                                    Price (EGP) <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="@Model.Price" type="number" step="0.01" class="form-control" />
+                                <span asp-validation-for="@Model.Price" class="text-danger"></span>
+                            </div>
 
-                                <div class="detail-item mb-4">
-                                    <div class="d-flex align-items-center mb-2">
-                                        <div class="icon-box me-3">
-                                            @* If Plan is Active put class bi-check-circle-fill text-success if not bi-x-circle-fill text-danger *@
-                                            <i class="bi fs-4 @(Model.IsActive ? "bi-check-circle-fill text-success" : "bi-x-circle-fill text-danger")"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 text-muted">Status</h6>
-                                            <p class="mb-0">
-                                                @if (Model.IsActive)
-                                                {
-                                                    <span class="badge bg-success">
-                                                        Active
-                                                    </span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-danger">
-                                                        Inactive
-                                                    </span>
-                                                }
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-12">
+                                <label asp-for="@Model.Description" class="form-label fw-semibold">
+                                    Description <span class="text-danger">*</span>
+                                </label>
+                                <textarea asp-for="@Model.Description" class="form-control" rows="4"></textarea>
+                                <span asp-validation-for="@Model.Description" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="card-footer bg-white border-0 p-4">
-                            <div class="d-flex justify-content-between gap-2">
-                                <a asp-action="Index" class="btn btn-outline flex-fill">
-                                    <i class="bi bi-arrow-left me-1"></i>Back
-                                </a>
-                            </div>
+                        <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                            <a asp-action="Index" class="btn btn-outline">
+                                <i class="bi bi-arrow-left me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-fill">
+                                <i class="bi bi-check-lg me-1"></i>Update Plan
+                            </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 </div>
