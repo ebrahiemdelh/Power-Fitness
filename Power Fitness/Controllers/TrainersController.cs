@@ -32,12 +32,14 @@
         [HttpPost]
         public async Task<IActionResult> Create(CreateTrainerViewModel model, CancellationToken cancellationToken = default)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _trainerService.CreateTrainerAsync(model, cancellationToken: cancellationToken);
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
-            return View(model);
+            var result = await _trainerService.CreateTrainerAsync(model, cancellationToken: cancellationToken);
+            if (result) TempData["SuccessMessage"] = "Trainer Created Successfully";
+            else TempData["ErrorMessage"] = "Error Creating Trainer";
+            return RedirectToAction(nameof(Index));
         }
         #endregion
         #region Edit Trainer
@@ -53,12 +55,14 @@
         [HttpPost]
         public async Task<IActionResult> Edit(int id, EditTrainerViewModel model, CancellationToken cancellationToken = default)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _trainerService.EditTrainerAsync(model, cancellationToken: cancellationToken);
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
-            return View(model);
+            var result = await _trainerService.EditTrainerAsync(id, model, cancellationToken);
+            if (result) TempData["SuccessMessage"] = "Trainer Updated Successfully";
+            else TempData["ErrorMessage"] = "Error Updating Trainer";
+            return RedirectToAction(nameof(Index));
         }
         #endregion
         #region Delete Trainer
@@ -75,6 +79,9 @@
         public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken cancellationToken = default)
         {
             var result = await _trainerService.DeleteTrainerAsync(id, cancellationToken: cancellationToken);
+            
+            if (result) TempData["SuccessMessage"] = "Trainer Deleted Successfully";
+            else TempData["ErrorMessage"] = "Error Deleting Trainer";
             return RedirectToAction(nameof(Index));
         }
         #endregion

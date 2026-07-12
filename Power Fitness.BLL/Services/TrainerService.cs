@@ -69,12 +69,36 @@ namespace Power_Fitness.BLL.Services
 
         public async Task<bool> CreateTrainerAsync(CreateTrainerViewModel model, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var trainer = new Trainer()
+            {
+                DateOfBirth = model.DateOfBirth,
+                Email = model.Email,
+                Phone = model.Phone,
+                Name = model.Name,
+                Gender = model.Gender,
+                HireDate = DateTime.Now,
+                Address = new Address()
+                {
+                    BuildingNo = model.BuildingNumber,
+                    Street = model.Street,
+                    City = model.City
+                },
+                Specialty = model.Specialties,
+            };
+            return await _unitOfWork.GetRepository<Trainer>().AddAsync(trainer, cancellationToken) > 0;
         }
 
-        public async Task<bool> EditTrainerAsync(int id,EditTrainerViewModel model, CancellationToken cancellationToken = default)
+        public async Task<bool> EditTrainerAsync(int id, EditTrainerViewModel model, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var trainer = await _unitOfWork.GetRepository<Trainer>().GetByIdAsync(id, cancellationToken);
+            if (trainer is null) return false;
+            trainer.Email = model.Email;
+            trainer.Phone = model.Phone;
+            trainer.Address.BuildingNo = model.BuildingNumber;
+            trainer.Address.Street = model.Street;
+            trainer.Address.City = model.City;
+            trainer.Specialty = model.Specialties;
+            return await _unitOfWork.SaveChangesAsync(cancellationToken) > 0;
         }
         public async Task<bool> DeleteTrainerAsync(int id, CancellationToken cancellationToken = default)
         {

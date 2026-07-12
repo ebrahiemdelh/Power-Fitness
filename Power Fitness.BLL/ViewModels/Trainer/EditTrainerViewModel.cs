@@ -5,7 +5,6 @@ namespace Power_Fitness.BLL.ViewModels.Trainer
 {
     public class EditTrainerViewModel
     {
-        [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; } = default!;
 
         [Required(ErrorMessage = "Email is required")]
