@@ -16,6 +16,22 @@ namespace Power_Fitness.Controllers
             var sessions = await _sessionService.GetAllSessionsAsync(cancellationToken: cancellationToken);
             return View(sessions);
         }
+
+        public async Task<IActionResult> Details(int id, CancellationToken cancellationToken = default)
+        {
+            if (id == 0)
+            {
+                TempData["ErrorMessage"] = "Session Id is Invalid";
+                return View(nameof(Index));
+            }
+            var session = await _sessionService.GetSessionByIdAsync(id, cancellationToken);
+            if (session is null)
+            {
+                TempData["ErrorMessage"] = "Session Not Found";
+                return View(nameof(Index));
+            }
+            return View(session);
+        }
         #region Create Session
         public async Task<IActionResult> Create(CancellationToken cancellationToken = default)
         {
@@ -26,13 +42,15 @@ namespace Power_Fitness.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateSessionViewModel model, CancellationToken cancellationToken = default)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _sessionService.CreateSessionAsync(model, cancellationToken: cancellationToken);
-                return RedirectToAction(nameof(Index));
+                await GetTrainersAndCategories(cancellationToken);
+                return View(model);
             }
-            await GetTrainersAndCategories(cancellationToken);
-            return View(model);
+            var res = await _sessionService.CreateSessionAsync(model, cancellationToken: cancellationToken);
+            if (!res) TempData["ErrorMessage"] = "Error Creating Session.";
+            else TempData["SuccessMessage"] = "Session Created Successfully.";
+            return RedirectToAction(nameof(Index));
         }
         #endregion
         #region Edit Session
@@ -51,14 +69,16 @@ namespace Power_Fitness.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, EditSessionViewModel model, CancellationToken cancellationToken = default)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _sessionService.EditSessionAsync(id, model, cancellationToken: cancellationToken);
-                return RedirectToAction(nameof(Index));
+                await GetTrainersAndCategories(cancellationToken);
+                return View(model);
             }
-            await GetTrainersAndCategories(cancellationToken);
+            var res = await _sessionService.EditSessionAsync(id, model, cancellationToken: cancellationToken);
+            if (!res) TempData["ErrorMessage"] = "Error Updating Session.";
+            else TempData["SuccessMessage"] = "Session Updated Successfully.";
 
-            return View(model);
+            return RedirectToAction(nameof(Index));
         }
         #endregion
 
@@ -75,7 +95,9 @@ namespace Power_Fitness.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken cancellationToken = default)
         {
-            await _sessionService.DeleteSessionAsync(id, cancellationToken: cancellationToken);
+            var res = await _sessionService.DeleteSessionAsync(id, cancellationToken: cancellationToken);
+            if (!res) TempData["ErrorMessage"] = "Error Deleting Session.";
+            else TempData["SuccessMessage"] = "Session Deleted Successfully.";
             return RedirectToAction(nameof(Index));
         }
         #endregion

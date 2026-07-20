@@ -7,10 +7,10 @@ namespace Power_Fitness.BLL.ViewModels.Session
         [StringLength(200, ErrorMessage = "The Description must be at most 200 characters long.")]
         public string Description { get; set; } = default!;
 
-        [Required(ErrorMessage = "The Category field is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a category.")]
         public int CategoryId { get; set; }
 
-        [Required(ErrorMessage = "The Trainer field is required.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a trainer.")]
         public int TrainerId { get; set; }
 
         [Required(ErrorMessage = "The Start Date & Time field is required.")]
@@ -19,7 +19,8 @@ namespace Power_Fitness.BLL.ViewModels.Session
         [Required(ErrorMessage = "The End Date & Time field is required.")]
         public DateTime EndDate { get; set; }
 
-        [MinLength(1, ErrorMessage = "The Capacity must be greater than 0.")]
+        [Required(ErrorMessage = "The Capacity field is required.")]
+        [Range(1, 25, ErrorMessage = "Capacity must be between 1 and 25.")]
         public int Capacity { get; set; }
     }
 }

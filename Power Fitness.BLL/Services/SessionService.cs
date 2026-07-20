@@ -35,8 +35,8 @@ namespace Power_Fitness.BLL.Services
         }
         public async Task<SessionViewModel> GetSessionByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            var session = await _unitOfWork.Sessions.GetByIdAsync(id, cancellationToken: cancellationToken);
-            if (session == null) return null;
+            var session = await _unitOfWork.Sessions.GetSessionWithCategoryAndTrainerAsync(id, cancellationToken: cancellationToken);
+            if (session == null) return null!;
             var result = new SessionViewModel
             {
                 Id = session.Id,
@@ -57,7 +57,8 @@ namespace Power_Fitness.BLL.Services
             var trainer = await _unitOfWork.GetRepository<Trainer>().GetByIdAsync(createSession.TrainerId, cancellationToken);
             var category = await _unitOfWork.GetRepository<Category>().GetByIdAsync(createSession.CategoryId, cancellationToken);
 
-            if (string.Compare(category.Name, trainer.Specialty.ToString(), true) == 0) return false;
+            if (!string.Equals(category?.Name, trainer?.Specialty.ToString(), StringComparison.OrdinalIgnoreCase))
+                return false;
 
             //TODO: Check if the trainer is available for the session time
 
@@ -76,9 +77,9 @@ namespace Power_Fitness.BLL.Services
         }
         public async Task<EditSessionViewModel> GetSessionForUpdateAsync(int id, CancellationToken cancellationToken = default)
         {
-            if (id == 0) return null;
+            if (id == 0) return null!;
             var session = await _unitOfWork.Sessions.GetWithCategoryByIdAsync(id, cancellationToken);
-            if (session == null) return null;
+            if (session == null) return null!;
             var result = new EditSessionViewModel
             {
                 TrainerId = session.TrainerId,
@@ -99,8 +100,10 @@ namespace Power_Fitness.BLL.Services
             if (editSession.StartDate > editSession.EndDate) return false;
             var trainer = await _unitOfWork.GetRepository<Trainer>().GetByIdAsync(editSession.TrainerId, cancellationToken);
 
-            if (string.Compare(session.Category.Name, trainer?.Specialty.ToString(), true) == 0) return false;
+            if (!string.Equals(session.Category.Name, trainer?.Specialty.ToString(), StringComparison.OrdinalIgnoreCase))
+                return false;
 
+            //TODO: Check if the trainer is available for the session time
 
             session.TrainerId = editSession.TrainerId;
             session.Description = editSession.Description;

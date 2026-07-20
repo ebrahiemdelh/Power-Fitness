@@ -13,6 +13,7 @@ namespace Power_Fitness.BLL.ViewModels.Trainer
 
 
         [Required(ErrorMessage = "Phone is required")]
+        [Length(11,11,ErrorMessage ="phone is 11")]
         public string Phone { get; set; } = default!;
 
         [Required(ErrorMessage = "Building number is required")]

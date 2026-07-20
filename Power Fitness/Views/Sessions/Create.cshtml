@@ -43,7 +43,7 @@
 
                             <div class="col-12">
                                 <label asp-for="Description" class="form-label fw-semibold">
-                                    Description <span class="text-danger">*</span>
+                                    Description
                                 </label>
                                 <textarea asp-for="Description" class="form-control" rows="3"
                                           placeholder="Describe the session content and objectives..."></textarea>
@@ -103,7 +103,7 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const startInput = document.querySelector('input[name="StartDate"]');
             const endInput = document.querySelector('input[name="EndDate"]');
 
@@ -128,7 +128,7 @@
                 endInput.value = localOneHourLater;
             }
 
-            startInput.addEventListener("change", function () {
+            startInput.addEventListener("change", function() {
                 endInput.min = startInput.value;
                 if (endInput.value && endInput.value < startInput.value) {
                     endInput.value = "";
@@ -136,8 +136,4 @@
             });
         });
     </script>
-
-
-
-}
 }

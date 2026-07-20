@@ -1,5 +1,4 @@
 ﻿using Power_Fitness.DAL.Context;
-using Power_Fitness.DAL.Contracts;
 
 namespace Power_Fitness.DAL.Repositories
 {
