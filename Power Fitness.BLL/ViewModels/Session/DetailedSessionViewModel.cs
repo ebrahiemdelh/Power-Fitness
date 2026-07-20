@@ -11,9 +11,6 @@
         public string StartDate { get; set; } = default!;
         public string EndDate { get; set; } = default!;
         public string Duration { get; set; } = default!;
-
-        // TODO: Fix Status to be Ongoing, UpComing, Completed
-
         public string Status => AvailableSlots > 0 ? "Available" : "Full";
     }
 }

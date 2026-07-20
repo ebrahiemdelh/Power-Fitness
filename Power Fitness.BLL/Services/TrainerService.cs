@@ -65,8 +65,6 @@ namespace Power_Fitness.BLL.Services
                 City = trainer.Address.City,
             };
         }
-        // Todo: Implement CreateTrainerAsync and EditTrainerAsync methods
-
         public async Task<bool> CreateTrainerAsync(CreateTrainerViewModel model, CancellationToken cancellationToken = default)
         {
             var trainer = new Trainer()

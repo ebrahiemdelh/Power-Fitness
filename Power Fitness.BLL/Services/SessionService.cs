@@ -60,7 +60,14 @@ namespace Power_Fitness.BLL.Services
             if (!string.Equals(category?.Name, trainer?.Specialty.ToString(), StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            //TODO: Check if the trainer is available for the session time
+            var trainerHasConflict = await _unitOfWork.AnyAsync<Session>(s =>
+                        s.TrainerId == createSession.TrainerId &&
+                        createSession.StartDate < s.EndDate &&
+                        createSession.EndDate > s.StartDate,
+                        cancellationToken);
+
+            if (trainerHasConflict)
+                return false;
 
             var session = new Session
             {
@@ -103,7 +110,11 @@ namespace Power_Fitness.BLL.Services
             if (!string.Equals(session.Category.Name, trainer?.Specialty.ToString(), StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            //TODO: Check if the trainer is available for the session time
+            var trainerHasConflict = await _unitOfWork.AnyAsync<Session>(s =>
+            s.TrainerId == editSession.TrainerId &&
+            editSession.StartDate < s.EndDate &&
+            editSession.EndDate > s.StartDate,
+            cancellationToken);
 
             session.TrainerId = editSession.TrainerId;
             session.Description = editSession.Description;
