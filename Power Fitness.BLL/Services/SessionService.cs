@@ -1,35 +1,25 @@
-﻿using Power_Fitness.BLL.ViewModels.Session;
-using Power_Fitness.DAL.Contracts;
-
-namespace Power_Fitness.BLL.Services
+﻿namespace Power_Fitness.BLL.Services
 {
     public class SessionService : ISessionService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public SessionService(IUnitOfWork unitOfWork)
+        public SessionService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<List<SessionViewModel>> GetAllSessionsAsync(CancellationToken cancellationToken = default)
         {
             var sessions = await _unitOfWork.Sessions.GetSessionsWithCategoryAndTrainerAsync(cancellationToken: cancellationToken);
-            var result = sessions.Select(s => new SessionViewModel
-            {
-                Id = s.Id,
-                TrainerName = s.Trainer.Name,
-                CategoryName = s.Category.Name,
-                Description = s.Description,
-                StartDate = s.StartDate,
-                EndDate = s.EndDate,
-                Capacity = s.Capacity,
-                //AvailableSlots = s.AvailableSlots
-            }).ToList();
-            // TODO: Fix The N + 1 Query Problem
+            var result = _mapper.Map<List<SessionViewModel>>(sessions);
+
+            var bookedSessionsCount = await _unitOfWork.Sessions.SessionsBookedSlots(cancellationToken);
             foreach (var item in result)
             {
-                item.AvailableSlots = item.Capacity - await _unitOfWork.Sessions.CountOfBookedSlots(item.Id, cancellationToken);
+                item.AvailableSlots = item.Capacity - bookedSessionsCount.GetValueOrDefault(item.Id, 0);
             }
             return result;
         }
@@ -37,17 +27,8 @@ namespace Power_Fitness.BLL.Services
         {
             var session = await _unitOfWork.Sessions.GetSessionWithCategoryAndTrainerAsync(id, cancellationToken: cancellationToken);
             if (session == null) return null!;
-            var result = new SessionViewModel
-            {
-                Id = session.Id,
-                TrainerName = session.Trainer.Name,
-                CategoryName = session.Category.Name,
-                Description = session.Description,
-                StartDate = session.StartDate,
-                EndDate = session.EndDate,
-                Capacity = session.Capacity,
-                AvailableSlots = session.Capacity - await _unitOfWork.Sessions.CountOfBookedSlots(session.Id, cancellationToken)
-            };
+            var result = _mapper.Map<SessionViewModel>(session);
+            result.AvailableSlots = session.Capacity - await _unitOfWork.Sessions.CountOfBookedSlots(session.Id, cancellationToken);
             return result;
         }
         public async Task<bool> CreateSessionAsync(CreateSessionViewModel createSession, CancellationToken cancellationToken = default)
@@ -69,15 +50,7 @@ namespace Power_Fitness.BLL.Services
             if (trainerHasConflict)
                 return false;
 
-            var session = new Session
-            {
-                Capacity = createSession.Capacity,
-                CategoryId = createSession.CategoryId,
-                Description = createSession.Description,
-                StartDate = createSession.StartDate,
-                EndDate = createSession.EndDate,
-                TrainerId = createSession.TrainerId,
-            };
+            var session = _mapper.Map<Session>(createSession);
             var result = await _unitOfWork.GetRepository<Session>().AddAsync(session, cancellationToken);
             if (result > 1) return true;
             return false;

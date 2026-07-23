@@ -11,7 +11,7 @@ namespace Power_Fitness.BLL.ViewModels.Member
         public string Email { get; set; } = default!;
 
         [Required(ErrorMessage = "Phone Is Required")]
-        [RegularExpression(@"^\d{10}$", ErrorMessage = ("Invalid Phone Format"))]
+        [RegularExpression(@"^01\d{9}$", ErrorMessage = "Invalid Phone Format")]
         public string Phone { get; set; } = default!;
 
         public string Photo { get; set; } = "";

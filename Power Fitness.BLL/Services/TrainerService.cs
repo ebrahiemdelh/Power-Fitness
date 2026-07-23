@@ -6,27 +6,20 @@ namespace Power_Fitness.BLL.Services
     public class TrainerService : ITrainerService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public TrainerService(IUnitOfWork unitOfWork)
+        public TrainerService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<TrainerViewModel>> GetTrainersAsync(CancellationToken cancellationToken = default)
         {
             var trainers = await _unitOfWork.GetRepository<Trainer>().GetAllAsync(cancellationToken: cancellationToken);
-            var result = trainers.Select(t => new TrainerViewModel
-            {
-                Id = t.Id,
-                Name = t.Name,
-                Email = t.Email,
-                Gender = t.Gender.ToString(),
-                Phone = t.Phone,
-                Specalities = t.Specialty.ToString()
-            });
+            var result = _mapper.Map<IEnumerable<TrainerViewModel>>(trainers);
             return result;
         }
-
         public async Task<DetailedTrainerViewModel> GetDetailedTrainersAsync(int id, CancellationToken cancellationToken = default)
         {
             var trainer = await _unitOfWork.GetRepository<Trainer>().GetByIdAsync(id, cancellationToken);
@@ -35,15 +28,7 @@ namespace Power_Fitness.BLL.Services
                 return null;
             }
 
-            return new DetailedTrainerViewModel
-            {
-                Name = trainer.Name,
-                Email = trainer.Email,
-                Phone = trainer.Phone,
-                DateOfBirth = trainer.DateOfBirth.ToString("dd/MM/yyyy"),
-                Specialties = trainer.Specialty.ToString(),
-                Address = $"{trainer.Address.BuildingNo} - {trainer.Address.Street} - {trainer.Address.City}",
-            };
+            return _mapper.Map<DetailedTrainerViewModel>(trainer);
         }
         public async Task<EditTrainerViewModel> GetDetailedTrainersAsyncForEdit(int id, CancellationToken cancellationToken = default)
         {
@@ -53,36 +38,11 @@ namespace Power_Fitness.BLL.Services
                 return null;
             }
 
-            return new EditTrainerViewModel
-            {
-                Name = trainer.Name,
-                Email = trainer.Email,
-                Phone = trainer.Phone,
-
-                Specialties = trainer.Specialty,
-                BuildingNumber = trainer.Address.BuildingNo,
-                Street = trainer.Address.Street,
-                City = trainer.Address.City,
-            };
+            return _mapper.Map<EditTrainerViewModel>(trainer);
         }
         public async Task<bool> CreateTrainerAsync(CreateTrainerViewModel model, CancellationToken cancellationToken = default)
         {
-            var trainer = new Trainer()
-            {
-                DateOfBirth = model.DateOfBirth,
-                Email = model.Email,
-                Phone = model.Phone,
-                Name = model.Name,
-                Gender = model.Gender,
-                HireDate = DateTime.Now,
-                Address = new Address()
-                {
-                    BuildingNo = model.BuildingNumber,
-                    Street = model.Street,
-                    City = model.City
-                },
-                Specialty = model.Specialties,
-            };
+            var trainer = _mapper.Map<Trainer>(model);
             return await _unitOfWork.GetRepository<Trainer>().AddAsync(trainer, cancellationToken) > 0;
         }
 

@@ -1,9 +1,5 @@
-using Microsoft.EntityFrameworkCore;
-using Power_Fitness.BLL.Contracts;
-using Power_Fitness.BLL.Services;
-using Power_Fitness.DAL.Context;
-using Power_Fitness.DAL.Contracts;
-using Power_Fitness.DAL.Repositories;
+using Power_Fitness.BLL;
+using Power_Fitness.DAL;
 
 namespace Power_Fitness
 {
@@ -13,21 +9,9 @@ namespace Power_Fitness
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<GymDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddDBs(builder.Configuration);
 
-            builder.Services.AddScoped<IPlansService, PlansService>();
-            builder.Services.AddScoped<IMembersService, MembersService>();
-            builder.Services.AddScoped<ISessionService, SessionService>();
-            builder.Services.AddScoped<ITrainerService, TrainerService>();
-
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); // Use this line for real database repository
-            builder.Services.AddScoped<IMemberRepository, MemberRepository>(); // Use this line for real database repository
-            //builder.Services.AddScoped(typeof(IPlansRepository<>), typeof(PlansMockRepository<>)); // Use this line for mock repository
-
-            builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
-            builder.Services.AddScoped<IPlanRepository, PlanRepository>();
-            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddServices();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

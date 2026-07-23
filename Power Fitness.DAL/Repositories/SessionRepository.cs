@@ -41,5 +41,14 @@ namespace Power_Fitness.DAL.Repositories
                 .Include(s => s.Trainer)
                 .FirstOrDefaultAsync(cancellationToken);
         }
+        public async Task<Dictionary<int, int>> SessionsBookedSlots(CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Bookings
+                .GroupBy(b => b.SessionId)
+                .ToDictionaryAsync(
+                    g => g.Key,
+                    g => g.Count(),
+                    cancellationToken);
+        }
     }
 }

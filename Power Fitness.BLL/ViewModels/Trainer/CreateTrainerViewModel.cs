@@ -13,6 +13,8 @@ namespace Power_Fitness.BLL.ViewModels.Trainer
         public string Email { get; set; } = default!;
 
         [Required(ErrorMessage = "Phone is required")]
+        [RegularExpression(@"^01\d{9}$", ErrorMessage = "Invalid Phone Format")]
+        [StringLength(11, ErrorMessage = ("Phone Length Is only 11"))]
         public string Phone { get; set; } = default!;
 
         [Required(ErrorMessage = "Date of Birth is required")]
